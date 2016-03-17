@@ -1,20 +1,36 @@
 #!/bin/bash
 
 function update {
-    echo -e "\n \e[92m Update machine"
+    echo -e "\n \e[92m Update machine\e[0m"
     sudo apt-get -y update
 }
 
 function upgrade {
-    echo -e "\n \e[92m Upgrade machine"
+    echo -e "\n \e[92m Upgrade machine\e[0m"
     sudo apt-get -y upgrade
 }
 
 # ---- Add repositories -----
 
 function add-reposirories {
-    echo -e "\n \e[92m Add repositories"
+    echo -e "\n \e[92m Add repositories\e[0m"
     sudo add-apt-repository ppa:ubuntu-mozilla-daily/ppa -yqq
+    sudo add-apt-repository ppa:webupd8team/sublime-text-2 -yqq
+}
+
+function setup {
+    echo -e "\n \e[104m Please give me your name for git and press [ENTER]\e[0m"
+    read gitname
+    echo -e "\n \e[104m Please give me your mail for git user and press [ENTER]\e[0m"
+    read gitmail
+    echo -e "\n \e[92m Create the revenant folder and PHPAaS folders\e[0m"
+    mkdir -p /home/$USER/.revenant
+    mkdir -p /home/$USER/vincoorbis
+    echo -e "\n \e[92m Set environment variables\e[0m"
+    echo "REVENANT_HOME=/home/$USER/.revenant" >> ~/.profile
+    echo "GITNAME=$gitname" >> ~/.profile
+    echo "GITMAIL=$gitmail" >> ~/.profile
+    source ~/.profile
 }
 
 
@@ -22,7 +38,7 @@ function add-reposirories {
 
 # Install python rqueriments: python, pip and virtualenv
 function install-python {
-    echo -e "\n \e[92m Install python, pip and virtualenv"
+    echo -e "\n \e[92m Install python, pip and virtualenv\e[0m"
     sudo apt-get install -yqq python-pip python-dev build-essential 
     sudo pip install --upgrade pip
     sudo pip install --upgrade virtualenv
@@ -31,28 +47,30 @@ function install-python {
 
 # Install php5
 function install-php5 {
-    echo -e "\n \e[92m Install php5"
+    echo -e "\n \e[92m Install php5\e[0m"
     sudo apt-get install -yqq qphp5 libapache2-mod-php5 php5-mcrypt
 }
 
 function install-nvm {
-    echo -e "\n \e[92m Install Node version manager"
+    echo -e "\n \e[92m Install Node version manager\e[0m"
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.4/install.sh | bash
     echo "source /home/$USER/.nvm/nvm.sh" >> /home/$USER/.profile
     source /home/$USER/.profile
+    nvm install 0.12
+    nvm use 0.12
 }
 
 # ----- Web Servers ------
 
 # Install apache2
 function install-apache2 {
-    echo -e "\n \e[92m Install apache2"
+    echo -e "\n \e[92m Install apache2\e[0m"
     sudo apt-get install apache2 -yqq
 }
 
 # Install nginx
 function install-nginx {
-    echo -e "\n \e[92m Install nginx"
+    echo -e "\n \e[92m Install nginx\e[0m"
     sudo apt-get install -yqq nginx
 }
 
@@ -62,7 +80,7 @@ function install-nginx {
 # Install opera
 # Warning: The opera download url could change
 function install-opera {
-    echo -e "\n \e[92m Install Opera"
+    echo -e "\n \e[92m Install Opera\e[0m"
     cd /usr/local/src
     sudo wget -O opera.deb "http://www.opera.com/download/get/?id=39079&location=410&nothanks=yes&sub=marine"
     sudo dpkg -i opera.deb
@@ -70,34 +88,34 @@ function install-opera {
 }
 
 function install-nightly {
-    echo -e "\n \e[92m Install Nightly"
+    echo -e "\n \e[92m Install Nightly\e[0m"
      sudo apt-get install firefox-trunk -yqq
 }
 
 # ----- Utilities ------
 
 function install-utilities {
-    echo -e "\n \e[92m Install utilities"
-    echo -e "\n \e[104m Install git"
+    echo -e "\n \e[92m Install utilities\e[0m"
+    echo -e "\n \e[104m Install git\e[0m"
     sudo apt-get install -yqq git
-    echo -e "\n \e[104m Install git-core"
+    echo -e "\n \e[104m Install git-core\e[0m"
     sudo apt-get install -yqq git-core
-    echo -e "\n \e[104m Install git-cola"
+    echo -e "\n \e[104m Install git-cola\e[0m"
     sudo apt-get install -yqq git-cola
-    echo -e "\n \e[104m Install curl"
+    echo -e "\n \e[104m Install curl\e[0m"
     sudo apt-get install -yqq curl
-    echo -e "\n \e[104m Install filezilla"
+    echo -e "\n \e[104m Install filezilla\e[0m"
     sudo apt-get install -yqq filezilla
-    echo -e "\n \e[104m Install gimp"
+    echo -e "\n \e[104m Install gimp\e[0m"
     sudo apt-get install -yqq gimp
-    echo -e "\n \e[104m Install inkscape"
+    echo -e "\n \e[104m Install inkscape\e[0m"
     sudo apt-get install -yqq inkscape
-    echo -e "\n \e[104m Install nfsd"
+    echo -e "\n \e[104m Install nfsd\e[0m"
     sudo apt-get install -yqq rpcbind nfs-common nfs-kernel-server
 }
 
 function install-vagrant {
-    echo -e "\n \e[92m Install vagrant"
+    echo -e "\n \e[92m Install vagrant\e[0m"
     cd /usr/local/src
     sudo wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.2_x86_64.deb
     sudo dpkg -i vagrant_1.7.2_x86_64.deb
@@ -106,13 +124,13 @@ function install-vagrant {
 }
 
 function install-zsh {
-    echo -e "\n \e[92m Install zsh"
+    echo -e "\n \e[92m Install zsh\e[0m"
     sudo apt-get install zsh -y
     curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 }
 
 function install-virtualbox {
-    echo -e "\n \e[92m Install virtualbox"
+    echo -e "\n \e[92m Install virtualbox\e[0m"
     cd /usr/local/src
     sudo wget http://download.virtualbox.org/virtualbox/4.3.28/virtualbox-4.3_4.3.28-100309~Ubuntu~precise_amd64.deb
     sudo dpkg -i virtualbox-4.3_4.3.28-100309~Ubuntu~precise_amd64.deb
@@ -120,16 +138,68 @@ function install-virtualbox {
 }
 
 function install-docker {
-    echo -e "\n \e[92m Install docker"
+    echo -e "\n \e[92m Install docker\e[0m"
     curl -sSL https://get.docker.com/ | sh
 }
 
 function install-composer {
-    echo -e "\n \e[92m Install docker"
+    echo -e "\n \e[92m Install docker\e[0m"
     cd ~
     curl -sS https://getcomposer.org/installer | php
     sudo mv composer.phar /usr/local/bin/composer
 }
 
+function install-tmux {
+    echo -e "\n \e[92m Install tmux\e[0m"
+    sudo apt-get install -yqq tmux
+}
 
-echo -e "\e[104mInit the instalation for new machine"
+function install-terminator {
+    echo -e "\n \e[92m Install terminator\e[0m"
+    isudo apt-get install -yqq terminator
+}
+
+# ---- Editors ------
+
+function install-sublime2 {
+    echo -e "\n \e[92m Install Sublime Text 2\e[0m"
+    sudo apt-get install sublime-text
+}
+
+function install-vim {
+    echo -e "\n \e[92m Install Vim Awesome Daniel\e[0m"
+    sudo apt-get remove -yqq vim.tiny
+    sudo apt-get install -yqq vim vim-gnome
+    cd $REVENANT_HOME
+    git clone --recursive https://github.com/dgamboaestrada/vim-awesome.git
+    cd vim-awesome
+    ./install.sh
+}
+
+function install-dot-files {
+    echo -e "\n \e[92m Install dotfiles\e[0m"
+    cd $REVENANT_HOME
+    git clone https://github.com/rodrisan/dotfiles.git
+    cd $HOME
+    rm .gitconfig
+    ln -s $REVENANT_HOME/dotfiles/.gitconfig $HOME
+    sed -i "s, email *= *.* ,email = $GITMAIL,g" $HOME/.gitconfig
+    ln -s $REVENANT_HOME/dotfiles/.gitconfig $HOME
+    sed -i "s, name *= *.* ,name = $GITMAIL,g" $HOME/.gitconfig
+}
+
+function bootstrap {
+    echo -e "\e[105mHi, Revenant init ...\e[0m" 
+    setup
+    add-reposirories
+    update
+    upgrade
+    install-utilities
+
+}
+
+
+
+# call arguments verbatim:
+$@
+
