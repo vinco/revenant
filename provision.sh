@@ -1,5 +1,7 @@
 #!/bin/bash
 
+REVENANT_HOME=/home/$USER/.revenant
+
 function update {
     echo -e "\n \e[92m Update machine\e[0m"
     sudo apt-get -y update
@@ -12,24 +14,25 @@ function upgrade {
 
 # ---- Add repositories -----
 
-function add-reposirories {
+function add-repositories {
     echo -e "\n \e[92m Add repositories\e[0m"
-    sudo add-apt-repository ppa:ubuntu-mozilla-daily/ppa -yqq
-    sudo add-apt-repository ppa:webupd8team/sublime-text-2 -yqq
+    sudo add-apt-repository ppa:ubuntu-mozilla-daily/ppa -y
+    sudo add-apt-repository ppa:webupd8team/sublime-text-2 -y
+    sudo apt-add-repository ppa:rael-gc/rvm -y
 }
 
 function setup {
     echo -e "\n \e[104m Please give me your name for git and press [ENTER]\e[0m"
-    read gitname
+    read GITNAME
     echo -e "\n \e[104m Please give me your mail for git user and press [ENTER]\e[0m"
-    read gitmail
+    read GITMAIL
     echo -e "\n \e[92m Create the revenant folder and PHPAaS folders\e[0m"
     mkdir -p /home/$USER/.revenant
     mkdir -p /home/$USER/vincoorbis
     echo -e "\n \e[92m Set environment variables\e[0m"
     echo "REVENANT_HOME=/home/$USER/.revenant" >> ~/.profile
-    echo "GITNAME=$gitname" >> ~/.profile
-    echo "GITMAIL=$gitmail" >> ~/.profile
+    echo "GITNAME=$GITNAME" >> ~/.profile
+    echo "GITMAIL=$GITMAIL" >> ~/.profile
     source ~/.profile
 }
 
@@ -48,16 +51,21 @@ function install-python {
 # Install php5
 function install-php5 {
     echo -e "\n \e[92m Install php5\e[0m"
-    sudo apt-get install -yqq qphp5 libapache2-mod-php5 php5-mcrypt
+    sudo apt-get install -yqq php5 libapache2-mod-php5 php5-mcrypt
 }
 
 function install-nvm {
     echo -e "\n \e[92m Install Node version manager\e[0m"
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.4/install.sh | bash
     echo "source /home/$USER/.nvm/nvm.sh" >> /home/$USER/.profile
-    source /home/$USER/.profile
+    source ~/.profile
     nvm install 0.12
     nvm use 0.12
+}
+
+function install-rvm {
+    echo -e "\n \e[92m Install Ruby version manager\e[0m"
+    sudo apt-get install -yqq rvm
 }
 
 # ----- Web Servers ------
@@ -66,6 +74,8 @@ function install-nvm {
 function install-apache2 {
     echo -e "\n \e[92m Install apache2\e[0m"
     sudo apt-get install apache2 -yqq
+    echo manual | sudo tee /etc/init/apache2.override
+    sudo service apache2 stop
 }
 
 # Install nginx
@@ -112,6 +122,8 @@ function install-utilities {
     sudo apt-get install -yqq inkscape
     echo -e "\n \e[104m Install nfsd\e[0m"
     sudo apt-get install -yqq rpcbind nfs-common nfs-kernel-server
+    echo -e "\n \e[104m Install gftp\e[0m"
+    sudo apt-get install -yqq gftp
 }
 
 function install-vagrant {
@@ -170,34 +182,50 @@ function install-vim {
     echo -e "\n \e[92m Install Vim Awesome Daniel\e[0m"
     sudo apt-get remove -yqq vim.tiny
     sudo apt-get install -yqq vim vim-gnome
-    cd $REVENANT_HOME
-    git clone --recursive https://github.com/dgamboaestrada/vim-awesome.git
-    cd vim-awesome
+    git clone --recursive https://github.com/dgamboaestrada/vim-awesome.git $REVENANT_HOME/vim-awesome
+    cd $REVENANT_HOME/vim-awesome
     ./install.sh
 }
 
 function install-dot-files {
     echo -e "\n \e[92m Install dotfiles\e[0m"
-    cd $REVENANT_HOME
-    git clone https://github.com/rodrisan/dotfiles.git
-    cd $HOME
-    rm .gitconfig
+    git clone https://github.com/rodrisan/dotfiles.git $REVENANT_HOME/dotfiles
+
+    file=~/.gitconfig
+    if [ -f $file ] ; then
+        rm -r .gitconfig
+    fi
+
     ln -s $REVENANT_HOME/dotfiles/.gitconfig $HOME
     sed -i "s, email *= *.* ,email = $GITMAIL,g" $HOME/.gitconfig
-    ln -s $REVENANT_HOME/dotfiles/.gitconfig $HOME
     sed -i "s, name *= *.* ,name = $GITMAIL,g" $HOME/.gitconfig
 }
 
 function bootstrap {
     echo -e "\e[105mHi, Revenant init ...\e[0m" 
     setup
-    add-reposirories
+    add-repositories
     update
     upgrade
     install-utilities
+    install-terminator
+    install-virtualbox
+    install-vagrant
+    install-docker
+    install-composer
+    install-zsh
+    install-tmux
+    install-python
+    install-php5
+    install-nvm
+    install-rvm
+    install-sublime2
+    install-vim
+    install-apache2
+    install-nginx
 
 }
-
+bootstrap
 
 
 # call arguments verbatim:
