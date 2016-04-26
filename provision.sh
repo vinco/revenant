@@ -44,6 +44,7 @@ function install-python {
     echo -e "\n \e[92m Install python, pip and virtualenv\e[0m"
     sudo apt-get install -yqq python-pip python-dev build-essential 
     sudo pip install --upgrade pip
+    sudo pip install --upgrade fabric
     sudo pip install --upgrade virtualenv
     sudo pip install vo-fabutils
 }
@@ -129,7 +130,7 @@ function install-utilities {
 function install-vagrant {
     echo -e "\n \e[92m Install vagrant\e[0m"
     cd /usr/local/src
-    sudo wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.2_x86_64.deb
+    sudo wget https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1_x86_64.deb
     sudo dpkg -i vagrant_1.7.2_x86_64.deb
     vagrant plugin install vagrant-hostsupdater
     cd ~
@@ -168,7 +169,7 @@ function install-tmux {
 
 function install-terminator {
     echo -e "\n \e[92m Install terminator\e[0m"
-    isudo apt-get install -yqq terminator
+    sudo apt-get install -yqq terminator
 }
 
 # ---- Editors ------
