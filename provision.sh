@@ -12,6 +12,13 @@ function upgrade {
     sudo apt-get -y upgrade
 }
 
+
+function reboot-system {
+    echo -e "\n \e[92m Reboot system\e[0m"
+    chsh -s $(which zsh)
+    sudo reboot
+}
+
 # ---- Add repositories -----
 
 function add-repositories {
@@ -30,9 +37,9 @@ function setup {
     mkdir -p /home/$USER/.revenant
     mkdir -p /home/$USER/vincoorbis
     echo -e "\n \e[92m Set environment variables\e[0m"
-    echo "REVENANT_HOME=/home/$USER/.revenant" >> ~/.profile
-    echo "GITNAME=$GITNAME" >> ~/.profile
-    echo "GITMAIL=$GITMAIL" >> ~/.profile
+    echo "export REVENANT_HOME=/home/$USER/.revenant" >> ~/.profile
+    echo "export GITNAME=$GITNAME" >> ~/.profile
+    echo "export GITMAIL=$GITMAIL" >> ~/.profile
     source ~/.profile
 }
 
@@ -125,6 +132,8 @@ function install-utilities {
     sudo apt-get install -yqq rpcbind nfs-common nfs-kernel-server
     echo -e "\n \e[104m Install gftp\e[0m"
     sudo apt-get install -yqq gftp
+    echo -e "\n \e[104m Install shutter\e[0m"
+    sudo apt-get install -yqq shutter
 }
 
 function install-vagrant {
@@ -179,13 +188,18 @@ function install-sublime2 {
     sudo apt-get install sublime-text
 }
 
-function install-vim {
+function install-vim-daniel {
     echo -e "\n \e[92m Install Vim Awesome Daniel\e[0m"
     sudo apt-get remove -yqq vim.tiny
     sudo apt-get install -yqq vim vim-gnome
     git clone --recursive https://github.com/dgamboaestrada/vim-awesome.git $REVENANT_HOME/vim-awesome
     cd $REVENANT_HOME/vim-awesome
     ./install.sh
+}
+
+function install-vim-spf13 {
+    echo -e "\n \e[92m Install Vim spf13\e[0m"
+    curl http://j.mp/spf13-vim3 -L -o - | sh
 }
 
 function install-dot-files {
@@ -224,10 +238,9 @@ function bootstrap {
     install-vim
     install-apache2
     install-nginx
+    system-reboot
 
 }
-bootstrap
-
 
 # call arguments verbatim:
 $@
