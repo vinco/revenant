@@ -65,8 +65,9 @@ function install-php5 {
 function install-nvm {
     echo -e "\n \e[92m Install Node version manager\e[0m"
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.4/install.sh | bash
-    echo "source /home/$USER/.nvm/nvm.sh" >> /home/$USER/.profile
-    source ~/.profile
+    echo "export NVM_DIR=\"/home/$USER/.nvm\"" >> ~/.zshrc
+    echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"' >> ~/.zshrc  # This loads nvm
+    source ~/.zshrc
     nvm install 0.12
     nvm use 0.12
 }
@@ -74,6 +75,8 @@ function install-nvm {
 function install-rvm {
     echo -e "\n \e[92m Install Ruby version manager\e[0m"
     sudo apt-get install -yqq rvm
+    echo "export PATH=\"$PATH:$HOME/.rvm/bin\"" >> ~/.zshrc # Add RVM to PATH for scripting
+    source ~/.zshrc
 }
 
 # ----- Web Servers ------
@@ -228,17 +231,17 @@ function bootstrap {
     install-vagrant
     install-docker
     install-composer
-    install-zsh
     install-tmux
     install-python
     install-php5
     install-nvm
     install-rvm
+    install-zsh
     install-sublime2
-    install-vim
+    install-vim-spf13
     install-apache2
     install-nginx
-    system-reboot
+    reboot-system
 
 }
 
